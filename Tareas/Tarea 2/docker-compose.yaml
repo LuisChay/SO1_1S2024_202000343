@@ -1,0 +1,53 @@
+services:
+  mongo:
+    image: mongo
+    container_name: 'MongoDB'
+    restart: always
+    volumes:
+      - volume_mongo:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      -MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      -MONGO_INITDB_ROOT_PASSWORD: root
+      -MONGO_INITDB_DATABASE: tarea2db
+    networks:
+      - mynetwork  
+
+  backend:
+    build: ./backend
+    image: "luischay/so1tarea2_backend"
+    container_name: 'so1tarea2_backend'
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      -MONGO_USER: mongoadmin
+      -MONGO_PASSWORD: root
+      -MONGO_HOST: MongoDB
+      -MONGO_PORT: 27017
+      -MONGO_DB: tarea2db
+    networks:
+      - mynetwork  
+    depends_on:
+      - mongo   
+
+
+  frontend:
+    build: ./frontend
+    image: 'luischay/so1tarea2_frontend'
+    container_name: 'so1tarea2_frontend'
+    ports:
+      - '3000:3000'
+    networks:
+      - mynetwork
+    depends_on:
+      - backend  
+
+networks:
+  mynetwork:
+    external: true
+
+volumes:
+  volume_mongo:
+  
