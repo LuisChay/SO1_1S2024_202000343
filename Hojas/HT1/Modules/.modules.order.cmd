@@ -1,0 +1,1 @@
+cmd_/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Hojas/HT1/Modules/modules.order := {   echo /home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Hojas/HT1/Modules/ram.ko; :; } | awk '!x[$$0]++' - > /home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Hojas/HT1/Modules/modules.order
