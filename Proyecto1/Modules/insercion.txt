@@ -1,0 +1,2 @@
+sudo insmod cpu_so1_1s2024.ko
+sudo insmod ram_so1_1s2024.ko
