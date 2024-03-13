@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  db:
+    image: 'mysql'
+    container_name: 'db'
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - base_mysql:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+  backend:
+    image: 'luischay/backendpo1-so1'
+    container_name: 'backend'
+    restart: always
+    volumes:
+      - type: bind
+        source: /proc
+        target: /proc
+      - /proc:/proc
+      - /etc/passwd:/etc/passwd
+    pid: host
+    user: root
+    privileged: true
+    ports:
+      - '5200:5200'
+
+  frontend:
+    image: 'luischay/frontendpo1-so1'
+    container_name: 'frontend'
+    ports:
+      - '3000:3000'
+    restart: always
+
+volumes:
+  base_mysql:     

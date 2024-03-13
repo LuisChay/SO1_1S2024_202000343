@@ -445,3 +445,53 @@ func getRecentCpuDataFromDB() ([]byte, error) {
 - **Descripcion**: Simulador de procesos Linux y sus estados que puede tomar
 
 ![Imagen 4](./imgs/4.png)
+
+# DOCKER
+
+- **Descripcion**: Se utilizo docker para empaquetar el backend, frontend y base de datos en contenedores separados y poder desplegarlos en un servidor en Ubuntu Server.
+
+## Repositorios Docker
+- **Backend:**
+[Backend](https://hub.docker.com/repository/docker/luischay/backendpo1-so1/)
+- **Frontend:**
+[Frontend](https://hub.docker.com/repository/docker/luischay/frontendpo1-so1/)
+
+## Dockerfiles
+- **Dockerfile Backend:**
+```dockerfile
+FROM golang:1.22-alpine
+
+WORKDIR /backend
+
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download
+
+COPY . .
+
+RUN go build -o app .
+
+EXPOSE 5000
+
+CMD ["./app"]
+```
+
+- **Dockerfile Frontend:**
+```dockerfile
+FROM node:18.15-alpine
+
+WORKDIR /frontend
+
+COPY package.json ./
+COPY package-lock.json ./
+
+RUN npm install 
+
+COPY . ./
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+```
+## Docker-compose
