@@ -36,14 +36,14 @@ MODULE_INFO(retpoline, "Y");
 static const struct modversion_info ____versions[]
 __used __section("__versions") = {
 	{ 0x49c1677a, "single_open" },
-	{ 0xd9820fc7, "filp_open" },
-	{ 0x5825f42e, "kernel_read" },
+	{ 0xa2f2ed94, "filp_open" },
+	{ 0xdf907ab3, "kernel_read" },
 	{ 0xbcab6ee6, "sscanf" },
-	{ 0x44482c3d, "filp_close" },
+	{ 0x1737cbea, "filp_close" },
 	{ 0xf0fdf6cb, "__stack_chk_fail" },
 	{ 0xd7791eaf, "remove_proc_entry" },
 	{ 0x73f5cdba, "seq_printf" },
-	{ 0xcae33d98, "init_task" },
+	{ 0x533ff826, "init_task" },
 	{ 0xdae0ef21, "seq_read" },
 	{ 0xbdfb6dbb, "__fentry__" },
 	{ 0xf43803e8, "proc_create" },

@@ -2,7 +2,7 @@
 **Luis Manuel Chay Marroquín // 202000343**
 
 ## MODULOS
-### RAM
+### Ram
 - **Descripción:** Módulo en lenguaje C encargado de obtener información de la memoria RAM del sistema.
 
 ```c
@@ -43,7 +43,7 @@ make
 sudo insmod ram_so1_1s2024.ko
 ```
 
-### CPU
+### Cpu
 - **Descripción:** Módulo en lenguaje C encargado de obtener información de la CPU del sistema como su porcentaje de uso y procesos.
 
 ```c
@@ -134,7 +134,7 @@ make
 sudo insmod cpu_so1_1s2024.ko
 ```
 
-## Base de datos
+## BASE DE DATOS MYSQL
 - **Descripción:** Base de datos que almacena la informacion de los modulos de RAM y CPU para registro historico
 ```sql
 use p1_so1;
@@ -149,7 +149,6 @@ CREATE TABLE IF NOT EXISTS cpu_historico (
     fecha DATETIME NOT NULL
 );
 ```
-
 
 ## BACKEND GO
 - **Descripción:** Backend en lenguaje Go que se encarga de obtener la información de los modulos de RAM y CPU y almacenarla en la base de datos, tambien envia la información al frontend al mismo tiempo.
@@ -423,4 +422,26 @@ func getRecentCpuDataFromDB() ([]byte, error) {
 ## FRONTEND REACT
 - **Descripción:** Frontend en lenguaje React que se encarga de mostrar la información de los modulos de RAM y CPU y mostrar la información historica de la base de datos.
 
-```jsx
+### Pagina principal (Monitoreo en tiempo real)
+
+- **Descripcion**: Muestra la información en tiempo real de la RAM y CPU del sistema.
+
+![Imagen 1](./imgs/1.png)
+
+### Histograma
+
+- **Descripcion**: Muestra la información historica de la RAM y CPU del sistema.
+
+![Imagen 2](./imgs/2.png)
+
+### Arbol de procesos
+
+- **Descripcion**: Muestra la información de los procesos corriendo a tiempo real del sistema. Cuenta con un selectbox para elegir los PID de los procesos y mostrar su arból de procesos.
+
+![Imagen 3](./imgs/3.png)
+
+### Simulador
+
+- **Descripcion**: Simulador de procesos Linux y sus estados que puede tomar
+
+![Imagen 4](./imgs/4.png)

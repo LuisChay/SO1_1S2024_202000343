@@ -270,6 +270,7 @@ deps_/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Cpu/
     $(wildcard include/config/NOINSTR_VALIDATION) \
   include/linux/objtool.h \
     $(wildcard include/config/FRAME_POINTER) \
+    $(wildcard include/config/CPU_SRSO) \
   include/linux/objtool_types.h \
   include/asm-generic/bug.h \
     $(wildcard include/config/GENERIC_BUG_RELATIVE_POINTERS) \
@@ -363,7 +364,6 @@ deps_/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Cpu/
     $(wildcard include/config/NUMA_KEEP_MEMINFO) \
   arch/x86/include/asm/nospec-branch.h \
     $(wildcard include/config/CALL_THUNKS_DEBUG) \
-    $(wildcard include/config/CPU_SRSO) \
     $(wildcard include/config/CPU_IBPB_ENTRY) \
   include/linux/static_key.h \
   arch/x86/include/asm/msr-index.h \
@@ -392,6 +392,8 @@ deps_/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Cpu/
   include/linux/string.h \
     $(wildcard include/config/BINARY_PRINTF) \
     $(wildcard include/config/FORTIFY_SOURCE) \
+  include/linux/err.h \
+  include/linux/overflow.h \
   include/uapi/linux/string.h \
   include/linux/fortify-string.h \
   include/linux/atomic.h \
@@ -429,7 +431,6 @@ deps_/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Cpu/
   arch/x86/include/asm/vdso/processor.h \
   include/linux/personality.h \
   include/uapi/linux/personality.h \
-  include/linux/err.h \
   include/linux/bottom_half.h \
   include/linux/lockdep.h \
     $(wildcard include/config/DEBUG_LOCKING_API_SELFTESTS) \
@@ -925,12 +926,10 @@ deps_/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Cpu/
     $(wildcard include/config/KFENCE) \
     $(wildcard include/config/SLAB) \
     $(wildcard include/config/SLUB) \
-  include/linux/overflow.h \
   include/linux/percpu-refcount.h \
   include/linux/kasan.h \
     $(wildcard include/config/KASAN_STACK) \
     $(wildcard include/config/KASAN_VMALLOC) \
-    $(wildcard include/config/KASAN_INLINE) \
   include/linux/kasan-enabled.h \
   include/uapi/linux/fs.h \
   include/linux/quota.h \
