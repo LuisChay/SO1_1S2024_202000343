@@ -446,17 +446,17 @@ func getRecentCpuDataFromDB() ([]byte, error) {
 
 ![Imagen 4](./imgs/4.png)
 
-# DOCKER
+## DOCKER
 
 - **Descripcion**: Se utilizo docker para empaquetar el backend, frontend y base de datos en contenedores separados y poder desplegarlos en un servidor en Ubuntu Server.
 
-## Repositorios Docker
+### Repositorios Docker
 - **Backend:**
 [Backend](https://hub.docker.com/repository/docker/luischay/backendpo1-so1/)
 - **Frontend:**
 [Frontend](https://hub.docker.com/repository/docker/luischay/frontendpo1-so1/)
 
-## Dockerfiles
+### Dockerfiles
 - **Dockerfile Backend:**
 ```dockerfile
 FROM golang:1.22-alpine
@@ -494,4 +494,102 @@ EXPOSE 3000
 
 CMD ["npm", "start"]
 ```
-## Docker-compose
+### Docker-compose
+
+- **docker-compose.yml:**
+```yaml
+version: '3'
+
+services:
+  mysql:
+    image: 'mysql'
+    container_name: 'mysqlcontain'
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'p1_so1'
+      MYSQL_PASSWORD: 'root'
+    volumes:
+      - base_mysql:/var/lib/mysql      
+    ports:
+      - '3306:3306'
+
+  backend:
+    image: 'luischay/backendpo1-so1'
+    restart: always
+    environment:
+      DB_USER: 'root'
+      DB_PASSWORD: 'root'
+      DB_HOST: 'mysqlcontain'
+      DB_PORT: '3306'
+      DB_NAME: 'p1_so1'
+    volumes:
+      - type: bind
+        source: /proc
+        target: /proc
+      - /proc:/proc
+      - /etc/passwd:/etc/passwd
+    pid: host
+    user: root
+    privileged: true
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mysql
+
+  frontend:
+    image: 'luischay/frontendpo1-so1'
+    ports:
+      - '3000:3000'
+    restart: always
+
+  nginx:
+    container_name: 'nginxcontain' 
+    image: 'nginx'
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - '80:80' 
+
+volumes:
+  base_mysql:
+```
+### Despliegue
+- **Comando:**
+```bash
+docker-compose up -d --build
+docker-compose down
+```
+
+## PROXYS
+- **Descripcion**: Se utilizo nginx como proxy para redirigir las peticiones al backend y frontend.
+
+### default.conf
+```nginx
+server {
+  listen 80 default_server;
+
+  server_name _;
+  location /api {
+            rewrite ^/api(/.*)$ $1 break;
+
+            proxy_pass http://backend:5000; # Reemplaza 3000 con el puerto de tu backend
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+            proxy_pass http://frontend:3000; # Reemplaza 80 con el puerto de tu frontend
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+}
+``` 

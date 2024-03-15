@@ -36,7 +36,7 @@ type Cpu struct {
 const (
     DBUsername = "root"
     DBPassword = "root"
-    DBHost     = "localhost"
+    DBHost     = "mysqlcontain"
     DBPort     = "3306"
     DBName     = "p1_so1"
 )
@@ -51,6 +51,13 @@ func connectDB() (*sql.DB, error) {
     }
     return db, nil
 }
+
+// DEBUG
+// DROP TABLE IF EXISTS ram_historico;
+// DROP TABLE IF EXISTS cpu_historico;  
+
+// SELECT * FROM cpu_historico;
+// SELECT * FROM  ram_historico;
 
 func main() {
 	fmt.Println("Iniciando el servidor...")
@@ -99,15 +106,15 @@ func main() {
     }()
 
     // Rutas para enviar los datos de ramInfo y cpuInfo
-    router.HandleFunc("/ram", func(writer http.ResponseWriter, req *http.Request) {
+    router.HandleFunc("/api/ram", func(writer http.ResponseWriter, req *http.Request) {
         json.NewEncoder(writer).Encode(ramInfo)
     }).Methods("GET")
 
-    router.HandleFunc("/cpu", func(writer http.ResponseWriter, req *http.Request) {
+    router.HandleFunc("/api/cpu", func(writer http.ResponseWriter, req *http.Request) {
         updateCpuInfoHandler(writer, req) // Handler específico para actualizar cpuInfo
     }).Methods("GET")
 
-	router.HandleFunc("/ramhistorico", func(writer http.ResponseWriter, req *http.Request) {
+	router.HandleFunc("/api/ramhistorico", func(writer http.ResponseWriter, req *http.Request) {
 		jsonData, err := getRecentRamDataFromDB()
 		if err != nil {
 			fmt.Println("Error al obtener datos de RAM desde la base de datos:", err)
@@ -125,7 +132,7 @@ func main() {
 		writer.Write(jsonData)
 	}).Methods("GET")
 	
-	router.HandleFunc("/cpuhistorico", func(writer http.ResponseWriter, req *http.Request) {
+	router.HandleFunc("/api/cpuhistorico", func(writer http.ResponseWriter, req *http.Request) {
 		jsonData, err := getRecentCpuDataFromDB()
 		if err != nil {
 			fmt.Println("Error al obtener datos de CPU desde la base de datos:", err)

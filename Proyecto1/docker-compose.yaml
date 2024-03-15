@@ -1,21 +1,28 @@
 version: '3'
 
 services:
-  db:
+  mysql:
     image: 'mysql'
-    container_name: 'db'
+    container_name: 'mysqlcontain'
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'p1_so1'
+      MYSQL_PASSWORD: 'root'
     volumes:
-      - base_mysql:/var/lib/mysql
+      - base_mysql:/var/lib/mysql      
     ports:
       - '3306:3306'
 
   backend:
     image: 'luischay/backendpo1-so1'
-    container_name: 'backend'
     restart: always
+    environment:
+      DB_USER: 'root'
+      DB_PASSWORD: 'root'
+      DB_HOST: 'mysqlcontain'
+      DB_PORT: '3306'
+      DB_NAME: 'p1_so1'
     volumes:
       - type: bind
         source: /proc
@@ -26,14 +33,26 @@ services:
     user: root
     privileged: true
     ports:
-      - '5200:5200'
+      - '5000:5000'
+    depends_on:
+      - mysql
 
   frontend:
     image: 'luischay/frontendpo1-so1'
-    container_name: 'frontend'
     ports:
       - '3000:3000'
     restart: always
 
+  nginx:
+    container_name: 'nginxcontain' 
+    image: 'nginx'
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - '80:80' 
+
 volumes:
-  base_mysql:     
+  base_mysql:

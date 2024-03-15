@@ -12,8 +12,8 @@ const Historico = () => {
     const fetchData = async () => {
       try {
         const [ramResponse, cpuResponse] = await Promise.all([
-          axios.get('http://localhost:5000/ramhistorico'),
-          axios.get('http://localhost:5000/cpuhistorico')
+          axios.get('http://localhost:5000/api/ramhistorico'),
+          axios.get('http://localhost:5000/api/cpuhistorico')
         ]);
         const formattedRAMData = formatData(ramResponse.data);
         const formattedCPUData = formatData(cpuResponse.data);

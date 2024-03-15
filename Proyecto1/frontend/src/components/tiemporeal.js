@@ -24,7 +24,7 @@ const Home = () => {
   useEffect(() => {
     const fetchRAMData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/ram');
+        const response = await axios.get('http://localhost:5000/api/ram');
         const { Total_Ram, Ram_en_Uso, Ram_libre, Porcentaje_en_uso } = response.data;
         setRamData({
           totalRam: Total_Ram,
@@ -39,7 +39,7 @@ const Home = () => {
 
     const fetchCPUData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/cpu');
+        const response = await axios.get('http://localhost:5000/api/cpu');
         const { Porcentaje_en_uso } = response.data;
         setCpuData({
           porcentajeEnUso: Porcentaje_en_uso,
