@@ -1,1 +1,1 @@
-savedcmd_/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Cpu/Module.symvers :=  scripts/mod/modpost -m -a      -o /home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Cpu/Module.symvers -T /home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Cpu/modules.order -i Module.symvers -e 
+cmd_/home/luis/Proyecto1/Modules/Cpu/Module.symvers := sed 's/\.ko$$/\.o/' /home/luis/Proyecto1/Modules/Cpu/modules.order | scripts/mod/modpost -m -a  -o /home/luis/Proyecto1/Modules/Cpu/Module.symvers -e -i Module.symvers   -T -
