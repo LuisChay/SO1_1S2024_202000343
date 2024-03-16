@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCPUData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/cpu');
+        const response = await axios.get('/api/cpu');
         setCpuTasks(response.data.tasks);
       } catch (error) {
         console.error('Error al obtener los datos de CPU:', error);
