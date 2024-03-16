@@ -24,14 +24,7 @@ services:
       DB_PORT: '3306'
       DB_NAME: 'p1_so1'
     volumes:
-      - type: bind
-        source: /proc
-        target: /proc
       - /proc:/proc
-      - /etc/passwd:/etc/passwd
-    pid: host
-    user: root
-    privileged: true
     ports:
       - '5000:5000'
     depends_on:
