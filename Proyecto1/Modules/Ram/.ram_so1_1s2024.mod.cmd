@@ -1,1 +1,1 @@
-cmd_/home/luis/Proyecto1/Modules/Ram/ram_so1_1s2024.mod := { echo  /home/luis/Proyecto1/Modules/Ram/ram_so1_1s2024.o;  echo; } > /home/luis/Proyecto1/Modules/Ram/ram_so1_1s2024.mod
+savedcmd_/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Ram/ram_so1_1s2024.mod := printf '%s\n'   ram_so1_1s2024.o | awk '!x[$$0]++ { print("/home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Ram/"$$0) }' > /home/luis/Documentos/Sopes/Lab/SO1_1S2024_202000343/Proyecto1/Modules/Ram/ram_so1_1s2024.mod

@@ -10,7 +10,14 @@ import (
 	"time"
     _ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+    "strconv"
+
 )
+
+type Response struct {
+    Message string `json:"message"`
+    PID     int    `json:"pid,omitempty"`
+}
 
 type Ram struct {
 	Total      int `json:"Total_Ram"`
@@ -43,6 +50,7 @@ const (
 
 var ramInfo Ram
 var cpuInfo Cpu
+var process *exec.Cmd 
 
 func connectDB() (*sql.DB, error) {
     db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", DBUsername, DBPassword, DBHost, DBPort, DBName))
@@ -149,6 +157,11 @@ func main() {
 		writer.WriteHeader(http.StatusOK)
 		writer.Write(jsonData)
 	}).Methods("GET")
+
+        router.HandleFunc("/api/start", StartProcess).Methods("POST")
+        router.HandleFunc("/api/stop", StopProcess).Methods("POST")
+        router.HandleFunc("/api/resume", ResumeProcess).Methods("POST")
+        router.HandleFunc("/api/kill", KillProcess).Methods("POST")
 
     // Iniciar el servidor HTTP
     log.Fatal(http.ListenAndServe(":5000", router))
@@ -365,4 +378,105 @@ func getRecentCpuDataFromDB() ([]byte, error) {
     }
 
     return jsonData, nil
+}
+// Funciones para el manejo de procesos
+
+// Envia la señal para crear un nuevo proceso
+func StartProcess(w http.ResponseWriter, r *http.Request) {
+    // Crear un nuevo proceso con un comando de espera
+    cmd := exec.Command("sleep", "infinity")
+    err := cmd.Start()
+    if err != nil {
+        fmt.Print(err)
+        http.Error(w, "Error al iniciar el proceso", http.StatusInternalServerError)
+        return
+    }
+
+    // Obtener el comando con PID
+    process = cmd
+
+    response := Response{
+        Message: fmt.Sprintf("Proceso iniciado con PID: %d y estado en espera", process.Process.Pid),
+        PID:     process.Process.Pid,
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+// Envia la señal para detener un proceso
+func StopProcess(w http.ResponseWriter, r *http.Request) {
+    var req struct {
+        PID int `json:"pid"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&req)
+    if err != nil {
+        http.Error(w, "Error al decodificar la solicitud", http.StatusBadRequest)
+        return
+    }
+
+    // Enviar señal SIGSTOP al proceso con el PID proporcionado
+    cmd := exec.Command("kill", "-SIGSTOP", strconv.Itoa(req.PID))
+    err = cmd.Run()
+    if err != nil {
+        http.Error(w, fmt.Sprintf("Error al detener el proceso con PID %d", req.PID), http.StatusInternalServerError)
+        return
+    }
+
+    response := Response{
+        Message: fmt.Sprintf("Proceso con PID %d detenido", req.PID),
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+// Envia la señal para reanudar un proceso
+func ResumeProcess(w http.ResponseWriter, r *http.Request) {
+    var req struct {
+        PID int `json:"pid"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&req)
+    if err != nil {
+        http.Error(w, "Error al decodificar la solicitud", http.StatusBadRequest)
+        return
+    }
+
+    // Enviar señal SIGCONT al proceso con el PID proporcionado
+    cmd := exec.Command("kill", "-SIGCONT", strconv.Itoa(req.PID))
+    err = cmd.Run()
+    if err != nil {
+        http.Error(w, fmt.Sprintf("Error al reanudar el proceso con PID %d", req.PID), http.StatusInternalServerError)
+        return
+    }
+
+    response := Response{
+        Message: fmt.Sprintf("Proceso con PID %d reanudado", req.PID),
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+// Envia la señal para matar un proceso
+func KillProcess(w http.ResponseWriter, r *http.Request) {
+    var req struct {
+        PID int `json:"pid"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&req)
+    if err != nil {
+        http.Error(w, "Error al decodificar la solicitud", http.StatusBadRequest)
+        return
+    }
+
+    // Enviar señal SIGKILL al proceso con el PID proporcionado
+    cmd := exec.Command("kill", "-9", strconv.Itoa(req.PID))
+    err = cmd.Run()
+    if err != nil {
+        http.Error(w, fmt.Sprintf("Error al intentar terminar el proceso con PID %d", req.PID), http.StatusInternalServerError)
+        return
+    }
+
+    response := Response{
+        Message: fmt.Sprintf("Proceso con PID %d ha terminado", req.PID),
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
 }

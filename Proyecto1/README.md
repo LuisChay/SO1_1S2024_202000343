@@ -417,6 +417,109 @@ func getRecentCpuDataFromDB() ([]byte, error) {
 
     return jsonData, nil
 }
+
+// Funciones para el manejo de procesos
+
+// Envia la señal para crear un nuevo proceso
+func StartProcess(w http.ResponseWriter, r *http.Request) {
+    // Crear un nuevo proceso con un comando de espera
+    cmd := exec.Command("sleep", "infinity")
+    err := cmd.Start()
+    if err != nil {
+        fmt.Print(err)
+        http.Error(w, "Error al iniciar el proceso", http.StatusInternalServerError)
+        return
+    }
+
+    // Obtener el comando con PID
+    process = cmd
+
+    response := Response{
+        Message: fmt.Sprintf("Proceso iniciado con PID: %d y estado en espera", process.Process.Pid),
+        PID:     process.Process.Pid,
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+// Envia la señal para detener un proceso
+func StopProcess(w http.ResponseWriter, r *http.Request) {
+    var req struct {
+        PID int `json:"pid"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&req)
+    if err != nil {
+        http.Error(w, "Error al decodificar la solicitud", http.StatusBadRequest)
+        return
+    }
+
+    // Enviar señal SIGSTOP al proceso con el PID proporcionado
+    cmd := exec.Command("kill", "-SIGSTOP", strconv.Itoa(req.PID))
+    err = cmd.Run()
+    if err != nil {
+        http.Error(w, fmt.Sprintf("Error al detener el proceso con PID %d", req.PID), http.StatusInternalServerError)
+        return
+    }
+
+    response := Response{
+        Message: fmt.Sprintf("Proceso con PID %d detenido", req.PID),
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+// Envia la señal para reanudar un proceso
+func ResumeProcess(w http.ResponseWriter, r *http.Request) {
+    var req struct {
+        PID int `json:"pid"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&req)
+    if err != nil {
+        http.Error(w, "Error al decodificar la solicitud", http.StatusBadRequest)
+        return
+    }
+
+    // Enviar señal SIGCONT al proceso con el PID proporcionado
+    cmd := exec.Command("kill", "-SIGCONT", strconv.Itoa(req.PID))
+    err = cmd.Run()
+    if err != nil {
+        http.Error(w, fmt.Sprintf("Error al reanudar el proceso con PID %d", req.PID), http.StatusInternalServerError)
+        return
+    }
+
+    response := Response{
+        Message: fmt.Sprintf("Proceso con PID %d reanudado", req.PID),
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
+// Envia la señal para matar un proceso
+func KillProcess(w http.ResponseWriter, r *http.Request) {
+    var req struct {
+        PID int `json:"pid"`
+    }
+    err := json.NewDecoder(r.Body).Decode(&req)
+    if err != nil {
+        http.Error(w, "Error al decodificar la solicitud", http.StatusBadRequest)
+        return
+    }
+
+    // Enviar señal SIGKILL al proceso con el PID proporcionado
+    cmd := exec.Command("kill", "-9", strconv.Itoa(req.PID))
+    err = cmd.Run()
+    if err != nil {
+        http.Error(w, fmt.Sprintf("Error al intentar terminar el proceso con PID %d", req.PID), http.StatusInternalServerError)
+        return
+    }
+
+    response := Response{
+        Message: fmt.Sprintf("Proceso con PID %d ha terminado", req.PID),
+    }
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
 ```
 
 ## FRONTEND REACT
@@ -440,11 +543,17 @@ func getRecentCpuDataFromDB() ([]byte, error) {
 
 ![Imagen 3](./imgs/3.png)
 
-### Simulador
+### Simulador de estados
 
-- **Descripcion**: Simulador de procesos Linux y sus estados que puede tomar
+- **Descripcion**: Simulador de procesos Linux grafico y con envio de señales.
 
 ![Imagen 4](./imgs/4.png)
+
+### Diagrama de estados
+
+- **Descripcion**: Diagrama de estados de los procesos actuales del procesador.
+
+![Imagen 5](./imgs/5.png)
 
 ## DOCKER
 
@@ -494,7 +603,7 @@ EXPOSE 3000
 
 CMD ["npm", "start"]
 ```
-### Docker-compose
+### Docker Compose
 
 - **docker-compose.yml:**
 ```yaml
@@ -524,14 +633,7 @@ services:
       DB_PORT: '3306'
       DB_NAME: 'p1_so1'
     volumes:
-      - type: bind
-        source: /proc
-        target: /proc
       - /proc:/proc
-      - /etc/passwd:/etc/passwd
-    pid: host
-    user: root
-    privileged: true
     ports:
       - '5000:5000'
     depends_on:
@@ -556,12 +658,13 @@ services:
 
 volumes:
   base_mysql:
+
 ```
 ### Despliegue
 - **Comando:**
 ```bash
-docker-compose up -d --build
-docker-compose down
+docker compose up -d --build
+docker compose down
 ```
 
 ## PROXYS
@@ -574,17 +677,12 @@ server {
 
   server_name _;
   location /api {
-            rewrite ^/api(/.*)$ $1 break;
 
-            proxy_pass http://backend:5000; # Reemplaza 3000 con el puerto de tu backend
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass http://backend:5000; 
     }
 
     location / {
-            proxy_pass http://frontend:3000; # Reemplaza 80 con el puerto de tu frontend
+            proxy_pass http://frontend:3000;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

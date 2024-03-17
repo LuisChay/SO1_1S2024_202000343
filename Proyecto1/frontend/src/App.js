@@ -5,6 +5,7 @@ import Home from './components/tiemporeal';
 import Historico from './components/historico';
 import Route2 from './components/arbol';
 import Simulador from './components/simulador';
+import Diagrama from './components/diagrama';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path='/histograma' element={<Historico/>}/>
         <Route path='/arbol' element={<Route2/>}/>
         <Route path='/simulador' element={<Simulador/>}/>
+        <Route path='/diagrama' element={<Diagrama/>}/>
       </Routes>
     </Router>
   );

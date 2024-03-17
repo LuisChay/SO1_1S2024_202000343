@@ -19,7 +19,10 @@ function Navbar() {
           <a class="nav-link active" aria-current="page" href="/arbol">Arbol de procesos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/simulador">Simulador</a>
+          <a class="nav-link active" aria-current="page" href="/simulador">Simulador de procesos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/diagrama">Diagrama de estados</a>
         </li>
       </ul>
 

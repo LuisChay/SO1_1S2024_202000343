@@ -2,8 +2,14 @@
 #define INCLUDE_VERMAGIC
 #include <linux/build-salt.h>
 #include <linux/elfnote-lto.h>
+#include <linux/export-internal.h>
 #include <linux/vermagic.h>
 #include <linux/compiler.h>
+
+#ifdef CONFIG_UNWINDER_ORC
+#include <asm/orc_header.h>
+ORC_HEADER;
+#endif
 
 BUILD_SALT;
 BUILD_LTO_INFO;
@@ -25,23 +31,25 @@ __section(".gnu.linkonce.this_module") = {
 MODULE_INFO(retpoline, "Y");
 #endif
 
+
+
 static const struct modversion_info ____versions[]
 __used __section("__versions") = {
-	{ 0x30ff7695, "module_layout" },
-	{ 0x83599202, "seq_read" },
-	{ 0xa81d3524, "remove_proc_entry" },
-	{ 0xb4e4d6a9, "proc_create" },
-	{ 0x84c49cc0, "init_task" },
-	{ 0xa68165d, "seq_printf" },
-	{ 0x92997ed8, "_printk" },
-	{ 0xd0da656b, "__stack_chk_fail" },
-	{ 0x2c319631, "filp_close" },
+	{ 0x49c1677a, "single_open" },
+	{ 0xa2f2ed94, "filp_open" },
+	{ 0xdf907ab3, "kernel_read" },
 	{ 0xbcab6ee6, "sscanf" },
-	{ 0xaa464f89, "kernel_read" },
-	{ 0x70aa6c73, "filp_open" },
-	{ 0x5b8239ca, "__x86_return_thunk" },
-	{ 0x801e8735, "single_open" },
+	{ 0x1737cbea, "filp_close" },
+	{ 0xf0fdf6cb, "__stack_chk_fail" },
+	{ 0xd7791eaf, "remove_proc_entry" },
+	{ 0x73f5cdba, "seq_printf" },
+	{ 0x533ff826, "init_task" },
+	{ 0xdae0ef21, "seq_read" },
 	{ 0xbdfb6dbb, "__fentry__" },
+	{ 0xf43803e8, "proc_create" },
+	{ 0x122c3a7e, "_printk" },
+	{ 0x5b8239ca, "__x86_return_thunk" },
+	{ 0x6ab589bc, "module_layout" },
 };
 
 MODULE_INFO(depends, "");
