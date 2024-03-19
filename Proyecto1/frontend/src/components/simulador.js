@@ -219,7 +219,7 @@ const Simulador = () => {
       console.error('No se ha iniciado ningún proceso para reanudar');
     }
   };
-  
+   
 
   return (
     <div>
