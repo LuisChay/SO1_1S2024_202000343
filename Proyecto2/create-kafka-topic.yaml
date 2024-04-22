@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kafka-topic-creator
+  namespace: so1-p2
+spec:
+  containers:
+  - name: kafka-client
+    image: confluentinc/cp-kafka:latest
+    command:
+    - sh
+    - -c
+    - "exec kafka-topics --bootstrap-server 10.51.92.185:9092 --create --topic votes-submitted --partitions 1 --replication-factor 1"
+  restartPolicy: Never

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploymentgrpc
+  namespace: so1-p2
+spec:
+  selector:
+    matchLabels:
+      role: deploymentgrpc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        role: deploymentgrpc
+    spec:
+      containers:
+      - name: containclient
+        image: luischay/grpcclient
+        ports:
+        - containerPort: 5000
+      - name: containserver
+        image: luischay/grpcserver1
+        ports:
+        - containerPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-grpc
+spec:
+  ports:
+  - name: grpc-client
+    port: 5000
+    targetPort: 5000
+  # - name: grpc-server
+  #   port: 5001
+  #   targetPort: 5001
+  selector:
+    role: deploymentgrpc
+  type: LoadBalancer  
