@@ -1,17 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: basic-ingress
+  name: ingress-grpc
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST"
+    nginx.ingress.kubernetes.io/rewrite-target: /insert
   namespace: so1-p2
 spec:
+  ingressClassName: nginx
   rules:
-  - host: 35.192.158.55.nip.io #IP ingress controller (nginx)
-    http:
+  - http:
       paths:
-      - path: /
+      - path: /grpc
         pathType: Prefix
         backend:
           service:

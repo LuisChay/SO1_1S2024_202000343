@@ -9,7 +9,7 @@ locust -f traffic.py
 # Ingress
 kubectl apply -f ingress.app.yaml -n so1-p2
 34.133.48.217
-
+https://35.192.158.55.nip.io/grpc
 # Conexion
 gcloud container clusters get-credentials cluster-so1p2 --zone us-central1-a --project so1-1s2024-202000343
 
