@@ -1,0 +1,16 @@
+FROM node:21 AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install
+RUN npm run build
+
+# Etapa de producción
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Exponer el puerto 80
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

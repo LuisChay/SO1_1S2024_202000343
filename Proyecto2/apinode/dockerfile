@@ -1,0 +1,17 @@
+# Desde que lenguaje o imagen queremos trabajar
+FROM node:21
+
+# Directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos
+COPY . .
+
+# Instalar dependencias
+RUN npm install
+
+# Exponer el puerto en el que se ejecuta tu aplicación backend
+EXPOSE 3100
+
+# Comando para iniciar tu aplicación backend
+CMD ["npm", "start"]
