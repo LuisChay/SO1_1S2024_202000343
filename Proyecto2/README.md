@@ -30,7 +30,7 @@ Desarrollar una aplicacion que permita la comunicación entre distintos servicio
 ### Namespace
 Se creó un namespace llamado `so1-p2` para desplegar todos los servicios.
 **Manifiesto de Namespace:**
-```bash
+```yaml
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -43,7 +43,7 @@ Se creó un archivo `ingress.app.yaml` para exponer los servicios de la aplicaci
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
 ```
 **Manifiesto de Ingress:**
-```bash
+```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -67,7 +67,7 @@ spec:
 ### Golang gRPC deployment
 Se creó un archivo `grcpdeploy.yaml` para desplegar el servicio gRPC en Kubernetes, incluye dos imagenes de contenedores, una para el cliente y otra para el servidor creadas por mi persona con su respectivo Service
 **Deployment:**
-```bash
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -94,8 +94,7 @@ spec:
         - containerPort: 5001
 ```
 **Service:**
-```bash
-
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -119,7 +118,7 @@ Se desplegó Kafka en Kubernetes con Strimzi, se creó un archivo `kafka.yaml` p
 kubectl apply -f https://strimzi.io/install/latest?namespace=so1-p2 -n so1-p2
 ```
 **Manifiesto de Kafka:**
-```bash
+```yaml
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
@@ -162,7 +161,7 @@ spec:
     userOperator: {}
 ```
 **Manifiesto de Kafka Topic:**
-```bash
+```yaml
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
@@ -178,7 +177,7 @@ spec:
 ### Consumer Kafka Go
 Se creó un archivo `consumergodeploy.yaml` para desplegar el consumidor de Kafka en Go programado por mi persona junto con su respectivo autoscaler con un maximum de 5 replicas y un minimum de 2 replicas.
 **Deployment:**
-```bash
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -198,7 +197,7 @@ spec:
         image: luischay/consumerkafka9
 ```
 **Autoscaler:**
-```bash
+```yaml
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
@@ -215,7 +214,7 @@ spec:
 ### MongoDB
 Se creó un archivo `mongo-deployment.yaml` para desplegar la base de datos MongoDB haciendo uso de su imagen oficial en Kubernetes junto a su respectivo service de tipo LoadBalancer para poder accedido por diferentes clientes o aplicaciones.
 **Deployment:**
-```bash
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -237,7 +236,7 @@ spec:
             - containerPort: 27017
 ```
 **Service:**
-```bash
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -254,7 +253,7 @@ spec:
 ### Redis
 Se creó un archivo `redis-deployment.yaml` para desplegar la base de datos Redis haciendo uso de su imagen oficial en Kubernetes junto a su respectivo service de tipo LoadBalancer para poder accedido por diferentes clientes o aplicaciones.
 **Deployment:**
-```bash
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -276,7 +275,7 @@ spec:
         - containerPort: 6379
 ``` 
 **Service:**
-```bash
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -294,7 +293,7 @@ spec:
 ### Grafana
 Se creó un archivo `grafana.yaml` para desplegar el servicio de Grafana en Kubernetes junto con su respectivo service de tipo LoadBalancer para poder accedido por diferentes clientes o aplicaciones y junto a su respectivo ConfigMap para configurar Grafana.
 **ConfigMap:**
-```bash
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -319,7 +318,7 @@ data:
     }
 ```
 **Deployment:**
-```bash
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -364,7 +363,7 @@ spec:
               name: grafana-datasources
 ```
 **Service:**
-```bash
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
