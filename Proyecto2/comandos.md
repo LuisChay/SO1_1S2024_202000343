@@ -5,6 +5,8 @@
 - 5000: grpcClient
 - 5001: grpcServer
 - 5002: consumergo
+- 5003: rustClient
+- 5004: rustServer
 - 9092: kafka
 - 6379: redis
 - 27017: mongo
@@ -25,6 +27,11 @@ http://35.192.158.55.nip.io/grpc
 ```bash
 gcloud container clusters get-credentials cluster-so1p2 --zone us-central1-a --project so1-1s2024-202000343
 ```
+# Rust deploy
+```bash
+kubectl apply -f rustdeploy.yaml -n so1-p2
+```
+104.198.230.176
 
 # GRCP Deploy
 ```bash
