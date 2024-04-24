@@ -10,7 +10,7 @@ struct Data {
     rank: String,
 }
 
-async fn handle_request(body: web::Json<Data>) -> impl Responder {
+async fn recepcion(body: web::Json<Data>) -> impl Responder {
     println!("Recibiendo solicitud... 2");
     let client = Client::new();
     let response = client
@@ -40,7 +40,7 @@ async fn main() -> std::io::Result<()> {
     println!("Inserting data rust");
     HttpServer::new(|| {
         App::new()
-            .route("/insert", web::post().to(handle_request))
+            .route("/insert", web::post().to(recepcion))
     })
     .bind("0.0.0.0:5003")?
     .run()
