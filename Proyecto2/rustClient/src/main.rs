@@ -11,7 +11,7 @@ struct Data {
 }
 
 async fn handle_request(body: web::Json<Data>) -> impl Responder {
-    println!("Recibiendo solicitud...");
+    println!("Recibiendo solicitud... 2");
     let client = Client::new();
     let response = client
         .post("http://localhost:5004/data")
@@ -28,13 +28,9 @@ async fn handle_request(body: web::Json<Data>) -> impl Responder {
                     Err(_) => HttpResponse::InternalServerError().finish(),
                 }
             } else {
-                println!("Error connecting to server: {:?}", response.status());
+                println!("Error de servidor: {:?}", response.status());
                 HttpResponse::InternalServerError().finish()
             }
-        }
-        Err(e) => {
-            println!("Error connecting to server: {}", e);
-            HttpResponse::InternalServerError().finish()
         }
     }
 }

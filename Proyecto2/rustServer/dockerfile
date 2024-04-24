@@ -1,15 +1,34 @@
-# Etapa de construcción del servidor
-FROM rust:1.77.0 as server-build-env
-WORKDIR /app/server
-ADD . /app/server
+# Use the official Rust image as a base
+FROM rust:latest as builder
+
+# Set the working directory in the container
+WORKDIR /usr/src/myapp
+
+# Copy the Cargo.toml and Cargo.lock files to leverage Docker's layer caching
+COPY Cargo.toml Cargo.lock ./
+
+# Build dependencies without the source code to leverage Docker's layer caching
+RUN mkdir src && echo "fn main() {println!(\"dummy\")}" > src/main.rs && \
+    cargo build --release && \
+    rm -f src/main.rs
+
+# Copy the source code into the container
+COPY . .
+
+# Build the application
 RUN cargo build --release
 
-FROM rust:1.77.0
+# Use a smaller base image for the final container
+FROM debian:buster-slim
 
-# Copia el servidor compilado
-COPY --from=server-build-env /app/server/target/release /server
+# Set the working directory in the container
+WORKDIR /usr/src/myapp
 
-# Exponer el puerto 5004
+# Copy the built binary from the builder stage to the final container
+COPY --from=builder /usr/src/myapp/target/release/myapp .
+
+# Expose the port on which your application will run
 EXPOSE 5004
 
-CMD ["/server/server"]
+# Command to run the application
+CMD ["./myapp"]
