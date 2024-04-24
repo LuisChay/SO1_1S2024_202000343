@@ -20,13 +20,18 @@ async fn mensaje(data: web::Json<Value>) -> impl Responder {
 
     let message = serde_json::to_string(&data.0)
         .expect("Error de formato JSON ");
+    
+    let message2 = format!(
+            "Name: {}, Album: {}, Year: {}, Rank: {}",
+            name, album, year, rank
+    );
 
     // Publicar el mensaje en Kafka
     match     producer
     .send(
         FutureRecord::to("votes-submitted")
-            .key("") 
-            .payload(&message),
+            .key(name) 
+            .payload(&message2),
         Duration::from_secs(0),
     ).await {
         Ok(_) => {

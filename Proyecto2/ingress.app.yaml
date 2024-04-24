@@ -17,3 +17,23 @@ spec:
             name: service-grpc
             port:
               number: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-rust
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /insert
+  namespace: so1-p2
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /rust
+        pathType: Prefix
+        backend:
+          service:
+            name: service-rust
+            port:
+              number: 5003

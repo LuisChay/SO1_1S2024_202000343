@@ -20,8 +20,8 @@ locust -f traffic.py
 kubectl apply -f ingress.app.yaml -n so1-p2
 ```
 34.133.48.217
-https://35.192.158.55.nip.io/grpc
 http://35.192.158.55.nip.io/grpc
+http://35.192.158.55.nip.io/rust
 
 # Conexion
 ```bash
@@ -31,7 +31,7 @@ gcloud container clusters get-credentials cluster-so1p2 --zone us-central1-a --p
 ```bash
 kubectl apply -f rustdeploy.yaml -n so1-p2
 ```
-104.198.230.176
+34.122.155.86
 
 # GRCP Deploy
 ```bash
@@ -68,6 +68,7 @@ kubectl apply -f redis-deployment.yaml -n so1-p2
 kubectl apply -f grafana.yaml -n so1-p2
 kubectl port-forward -n so1-p2 --address 0.0.0.0 svc/grafana 3000:3000
 ```
+35.184.245.209:3000
 
 # Cloud run
 App vue: https://vueapp2-sav6cg7sqa-uc.a.run.app/

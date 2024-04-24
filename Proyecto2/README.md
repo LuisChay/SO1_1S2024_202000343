@@ -63,6 +63,26 @@ spec:
             name: service-grpc
             port:
               number: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-rust
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /insert
+  namespace: so1-p2
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /rust
+        pathType: Prefix
+        backend:
+          service:
+            name: service-rust
+            port:
+              number: 5003
 ```
 ### Golang gRPC deployment
 Se creó un archivo `grcpdeploy.yaml` para desplegar el servicio gRPC en Kubernetes, incluye dos imagenes de contenedores, una para el cliente y otra para el servidor creadas por mi persona con su respectivo Service
@@ -111,6 +131,54 @@ spec:
     role: deploymentgrpc
   type: LoadBalancer  
 ```
+### Rust Deployment
+Se creó un archivo `rustdeploy.yaml` para desplegar el servicio Rust en Kubernetes, incluye dos imagenes de contenedores, una para el cliente y otra para el servidor creadas por mi persona con su respectivo Service
+**Deployment:**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploymentrust
+  namespace: so1-p2
+spec:
+  selector:
+    matchLabels:
+      role: deploymentrust
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        role: deploymentrust
+    spec:
+      containers:
+      - name: containclientrust
+        image: luischay/rustclient3
+        ports:
+        - containerPort: 5003
+      - name: containserverrust
+        image: luischay/rustserver4
+        ports:
+        - containerPort: 5004
+```
+**Service:**
+``` yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-rust
+spec:
+  ports:
+  - name: rust-client
+    port: 5003
+    targetPort: 5003
+  # - name: grpc-server
+  #   port: 5001
+  #   targetPort: 5001
+  selector:
+    role: deploymentrust
+  type: LoadBalancer  
+```
+
 ### Kafka
 Se desplegó Kafka en Kubernetes con Strimzi, se creó un archivo `kafka.yaml` para desplegar el cluster de Kafka y configurarlo para las necesidades del proyecto y un archivo `kafkatopic.yaml` para crear un tópico en Kafka.
 **Instalación de Strimzi:**

@@ -48,7 +48,7 @@ class MessageTraffic(HttpUser):
         if ( random_data is not None ):
             data_to_send = json.dumps(random_data)
             printDebug(data_to_send)
-            self.client.post("/", json=random_data)
+            self.client.post("", json=random_data)
         else:
             print(">> MessageTraffic: Envío finalizado")
             self.stop(True)

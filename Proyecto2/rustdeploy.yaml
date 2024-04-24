@@ -19,7 +19,7 @@ spec:
         ports:
         - containerPort: 5003
       - name: containserverrust
-        image: luischay/rustserver3
+        image: luischay/rustserver4
         ports:
         - containerPort: 5004
 ---
